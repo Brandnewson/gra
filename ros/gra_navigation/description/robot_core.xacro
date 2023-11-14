@@ -56,213 +56,46 @@
         <material>Gazebo/White</material>
     </gazebo>
 
-    <!-- WHEEL 1 (CLOCKWISE) -->
-    <joint name="wheel_1_joint" type="continuous">
-        <parent link="base_link"/>
-        <child link="wheel_1"/>
-        <origin xyz="1.25 0.5 0.2" rpy="${pi/2} 0 0"/>
-        <axis xyz="0 0 1"/>
-    </joint>
+    <xacro:rear_wheel/>
+    <xacro:front_wheel right_left="right" reflect_right_left="1"/>
+    <xacro:front_wheel right_left="left" reflect_right_left="-1"/>
+    <xacro:wheel right_left="right" reflect_right_left="1" front_rear="rear" reflect_front_rear="-1"/>
+    <xacro:wheel right_left="left" reflect_right_left="-1" front_rear="rear" reflect_front_rear="-1"/>
 
-    <link name="wheel_1">
-        <visual>
-            <geometry>      
-                <cylinder length="0.25" radius="0.20" />
-            </geometry>
-            <material name="black"/>
-        </visual>
-        <collision>
-            <geometry>      
-                <cylinder length="0.25" radius="0.20" />
-            </geometry>
-        </collision>
-        <xacro:inertial_cylinder mass="5" length="0.25" radius="0.20">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-        </xacro:inertial_cylinder>
-    </link>
-
-    <gazebo reference="wheel_1">
-        <material>Gazebo/Black</material>
-        <mu1 value="0.2"/>
-        <mu2 value="1.5"/>
-        <kp value="10000000.0" />
-        <kd value="10000.0" />
-        <fdir1 value="0 0 1"/>
-        <maxContacts value= "1"/>
-    </gazebo>
-
-    <!-- WHEEL 2 -->
-    <joint name="wheel_2_joint" type="continuous">
-        <parent link="base_link"/>
-        <child link="wheel_2"/>
-        <origin xyz="1.25 -0.5 0.2" rpy="-${pi/2} 0 0"/>
-        <axis xyz="0 0 1"/>
-    </joint>
-
-    <link name="wheel_2">
-        <visual>
-            <geometry>      
-                <cylinder length="0.25" radius="0.20" />
-            </geometry>
-            <material name="black"/>
-        </visual>
-        <collision>
-            <geometry>      
-                <cylinder length="0.25" radius="0.20" />
-            </geometry>
-        </collision>
-        <xacro:inertial_cylinder mass="5" length="0.25" radius="0.20">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-        </xacro:inertial_cylinder>
-    </link>
-
-    <gazebo reference="wheel_2">
-        <material>Gazebo/Black</material>
-        <mu1 value="0.2"/>
-        <mu2 value="1.5"/>
-        <kp value="10000000.0" />
-        <kd value="10000.0" />
-        <fdir1 value="0 0 1"/>
-        <maxContacts value= "1"/>
-    </gazebo>
-
-    <!-- WHEEL 3 -->
-    <joint name="wheel_3_joint" type="continuous">
-        <parent link="base_link"/>
-        <child link="wheel_3"/>
-        <origin xyz="-1.25 -0.5 0.2" rpy="-${pi/2} 0 0"/>
-        <axis xyz="0 0 1"/>
-    </joint>
-
-    <link name="wheel_3">
-        <visual>
-            <geometry>      
-                <cylinder length="0.25" radius="0.20" />
-            </geometry>
-            <material name="black"/>
-        </visual>
-        <collision>
-            <geometry>      
-                <cylinder length="0.25" radius="0.20" />
-            </geometry>
-        </collision>
-        <xacro:inertial_cylinder mass="5" length="0.25" radius="0.20">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-        </xacro:inertial_cylinder>
-    </link>
-
-    <gazebo reference="wheel_3">
-        <material>Gazebo/Black</material>
-        <mu1 value="0.2"/>
-        <mu2 value="1.5"/>
-        <kp value="10000000.0" />
-        <kd value="10000.0" />
-        <fdir1 value="0 0 1"/>
-        <maxContacts value= "1"/>
-    </gazebo>
-
-        <!-- WHEEL 4 -->
-    <joint name="wheel_4_joint" type="continuous">
-        <parent link="base_link"/>
-        <child link="wheel_4"/>
-        <origin xyz="-1.25 0.5 0.2" rpy="${pi/2} 0 0"/>
-        <axis xyz="0 0 1"/>
-    </joint>
-
-    <link name="wheel_4">
-        <visual>
-            <geometry>      
-                <cylinder length="0.25" radius="0.20" />
-            </geometry>
-            <material name="black"/>
-        </visual>
-        <collision>
-            <geometry>      
-                <cylinder length="0.25" radius="0.20" />
-            </geometry>
-        </collision>
-        <xacro:inertial_cylinder mass="5" length="0.25" radius="0.20">
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-        </xacro:inertial_cylinder>
-    </link>
-
-    <gazebo reference="wheel_4">
-        <material>Gazebo/Black</material>
-        <mu1 value="0.2"/>
-        <mu2 value="1.5"/>
-        <kp value="10000000.0" />
-        <kd value="10000.0" />
-        <fdir1 value="0 0 1"/>
-        <maxContacts value= "1"/>
-    </gazebo>
-
-    <!-- Joint for wheel_1 (left front wheel) steering -->
-    <joint name="wheel_1_steer_joint" type="revolute">
-        <parent link="base_link"/>
-        <child link="wheel_1"/>
-        <origin xyz="1.25 0.5 0.2" rpy="${pi/2} 0 0"/> <!-- adjust xyz as needed -->
+    <!-- steer -->
+    <link name="front_steer_link"/>
+    <joint name="front_steer_joint" type="fixed">
         <axis xyz="0 1 0"/>
-        <limit lower="-0.7854" upper="0.7854" effort="100" velocity="1"/> <!-- -45 to 45 degrees in radians -->
-    </joint>
-
-    <!-- Joint for wheel_2 (right front wheel) steering -->
-    <joint name="wheel_2_steer_joint" type="revolute">
         <parent link="base_link"/>
-        <child link="wheel_2"/>
-        <origin xyz="1.25 -0.5 0.2" rpy="-${pi/2} 0 0"/> <!-- adjust xyz as needed -->
-        <axis xyz="0 1 0"/>
-        <limit lower="-0.7854" upper="0.7854" effort="100" velocity="1"/> <!-- -45 to 45 degrees in radians -->
+        <child link="front_steer_link"/>
+        <origin xyz="0.77 0 0.25"/>
     </joint>
 
-
-    <!-- Transmissions -->
     <transmission name="tran1">
-        <type>transmission_interface/SimpleTransmission</type>
-        <joint name="wheel_1_joint">
-            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      <type>transmission_interface/SimpleTransmission</type>
+        <joint name="base_to_left_rear_wheel">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
         </joint>
-        <actuator name="motor_1">
-            <hardwareInterface>VelocityJointInterface</hardwareInterface>
-            <mechanicalReduction>1</mechanicalReduction>
+        <actuator name="motor1">
+          <hardwareInterface>EffortJointInterface</hardwareInterface>
+          <mechanicalReduction>1</mechanicalReduction>
         </actuator>
     </transmission>
 
     <transmission name="tran2">
-        <type>transmission_interface/SimpleTransmission</type>
-        <joint name="wheel_2_joint">
-            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-        </joint>
-        <actuator name="motor_2">
-            <hardwareInterface>VelocityJointInterface</hardwareInterface>
-            <mechanicalReduction>1</mechanicalReduction>
-        </actuator>
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="base_to_right_rear_wheel">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor2">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
     </transmission>
 
-    <transmission name="tran3">
-        <type>transmission_interface/SimpleTransmission</type>
-        <joint name="wheel_3_joint">
-            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-        </joint>
-        <actuator name="motor_3">
-            <hardwareInterface>VelocityJointInterface</hardwareInterface>
-            <mechanicalReduction>1</mechanicalReduction>
-        </actuator>
-    </transmission>
-
-    <transmission name="tran4">
-        <type>transmission_interface/SimpleTransmission</type>
-        <joint name="wheel_4_joint">
-            <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
-        </joint>
-        <actuator name="motor_4">
-            <hardwareInterface>VelocityJointInterface</hardwareInterface>
-            <mechanicalReduction>1</mechanicalReduction>
-        </actuator>
-    </transmission>
-
-    <gazebo>
+    <!-- <gazebo>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
         </plugin>
-    </gazebo>
+    </gazebo> -->
 
 </robot>
