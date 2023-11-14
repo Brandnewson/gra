@@ -1,11 +1,9 @@
-gra_base:
-  OmniwheelBaseController:
-    type: "gra_base/OmniwheelBaseController"
-    joint_name_1: "wheel_1_joint"
-    joint_name_2: "wheel_2_joint"
-    joint_name_3: "wheel_3_joint"
-    joint_name_4: "wheel_4_joint"
 joint_state_controller:
   JointStateController:
     type: "joint_state_controller/JointStateController"
     publish_rate: 50
+gra_base:
+  ackermann_steering_controller:
+    type: "ackermann_steering_controller/AckermannSteeringController"
+    rear_wheel: 'rear_wheel_joint'
+    front_steer: 'front_steer_joint'

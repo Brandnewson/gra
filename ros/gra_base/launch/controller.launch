@@ -1,17 +1,18 @@
 <?xml version="1.0"?>
 <launch>
 
-    <include file="$(find gra_core)/launch/machines.launch" />
+    <!-- <include file="$(find gra_core)/launch/machines.launch" /> -->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find gra_navigation)/description/robot.urdf.xacro" />
 
     <!-- ros_control server, provide ControllerManager which allows controller 
-    plugins (in this case our custom OmniwheelBaseController) to access them -->
+    plugins to access them -->
     <node pkg="gra_base" type="robot_hw" name="robot_hw" output="screen"/>
 
-    <!-- rosparam configuration required to tell ros_control that OmniwheelBaseController is the controller we will use -->
+    <!-- rosparam configuration required by the controller -->
     <rosparam file="$(find gra_base)/config/controller.yaml" command="load"/>
 
     <!-- Load the controller -->
     <node pkg="controller_manager" type="spawner" name="controller_spawner" output="screen"
-        args="gra_base/OmniwheelBaseController joint_state_controller/JointStateController"/>
+        args="gra_base/ackermann_steering_controller joint_state_controller/JointStateController"/>
 
 </launch>

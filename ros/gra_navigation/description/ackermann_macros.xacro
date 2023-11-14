@@ -96,7 +96,7 @@
             <child link="steer_${right_left}"/>
             <origin xyz="${base_center_x+length_from_base_center_to_wheel_x} ${-reflect_right_left*length_from_base_to_wheel_y} ${radius_wheel}"/>
             <dynamics damping="0.7" friction="0.7"/>
-            <limit effort="7.0" lower="${-80*PI/180}" upper="${80*PI/180}" velocity="${200.0*PI/180.0*0.95}"/>
+            <limit effort="7.0" lower="${-45*PI/180}" upper="${45*PI/180}" velocity="${200.0*PI/180.0*0.95}"/>
         </joint>
 
         <link name="${right_left}_front_wheel">
