@@ -45,7 +45,7 @@
   <exec_depend>rviz</exec_depend>
   <exec_depend>python3</exec_depend>
 
-  <export>
+  <!-- <export>
     <controller_interface plugin="${prefix}/src/control/omniwheel_base_controller/omniwheel_base_controller_plugins.xml"/>
-  </export>
+  </export> -->
 </package>

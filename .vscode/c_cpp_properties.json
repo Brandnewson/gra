@@ -10,7 +10,8 @@
                 "/usr/include/**",
                 "/opt/ros/noetic/include",
                 "/usr/include/eigen3",
-                "/root/catkin_ws/devel/include"
+                "/root/catkin_ws/devel/include",
+                "${workspaceFolder}/ros/gra_base/include"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
