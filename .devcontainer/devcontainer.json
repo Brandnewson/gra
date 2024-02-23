@@ -10,7 +10,7 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"remote.autoForwardPorts": false
+				"remote.autoForwardPorts": true
 			},
 			"extensions": [
 				"ms-python.python"
