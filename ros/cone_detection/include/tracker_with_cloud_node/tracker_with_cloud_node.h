@@ -46,6 +46,7 @@
 #include <pcl_ros/point_cloud.h>
 #include <pcl_ros/transforms.h>
 
+#include <omp.h>
 #include <opencv2/opencv.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <Eigen/Dense>
@@ -93,9 +94,10 @@ public:
                              pcl::PointCloud<pcl::PointXYZ>::Ptr& detection_cloud_raw);
   void processPointsWithMask(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, const sensor_msgs::Image& mask,
                              pcl::PointCloud<pcl::PointXYZ>::Ptr& detection_cloud_raw);
-  pcl::PointCloud<pcl::PointXYZ>::Ptr msg2TransformedCloud(const sensor_msgs::PointCloud2ConstPtr& cloud_msg);
+  pcl::PointCloud<pcl::PointXYZ>::Ptr downsampleCloudMsg(const sensor_msgs::PointCloud2ConstPtr& cloud_msg);
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud2TransformedCloud(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
-                                                             const std_msgs::Header& header);
+                                                             const std::string& source_frame,
+                                                             const std::string& target_frame, const ros::Time& stamp);
   pcl::PointCloud<pcl::PointXYZ>::Ptr euclideanClusterExtraction(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud);
   void createBoundingBox(vision_msgs::Detection3DArray& detections3d_msg,
                          const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
