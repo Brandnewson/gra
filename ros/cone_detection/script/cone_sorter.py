@@ -23,6 +23,9 @@ class ConeSorter:
         self.sub = rospy.Subscriber("/transformed_yolo_3d_result", Detection3DArray, self.callback)
         self.pub = rospy.Publisher("/cone_list", ConeDetection, queue_size=10)
 
+        # Initialize EKF dictionary for cones
+        self.cone_filters = {}
+
     def is_new_cone(self, new_cone, existing_cones):
         for cone in existing_cones:
             if np.linalg.norm(np.array([cone.x, cone.y]) - np.array([new_cone.x, new_cone.y])) < 1.0:   # Avoid redundant cones. Value is cone proximity threshold in meters
@@ -43,10 +46,42 @@ class ConeSorter:
             cone_type = CONE_TYPES[detection.results[0].id]  # Map the id to the human-readable name
             new_cone = Point(detection.bbox.center.position.x, detection.bbox.center.position.y, 0)  # Z value is not used
 
-            if self.is_new_cone(new_cone, self.cone_lists[cone_type]):
-                self.cone_lists[cone_type].append(new_cone)
+            # Update or initialize EKF for the cone
+            if cone_type not in self.cone_filters:
+                self.initialize_filter(cone_type)
+
+            # Extract measurement from detection
+            measurement = np.array([new_cone.x, new_cone.y])
+
+            # Update EKF with measurement
+            self.update_filter(cone_type, measurement)
 
         self.publish_cones()
+    def initialize_filter(self, cone_type):
+        # Initialize EKF for the cone
+        ekf = ExtendedKalmanFilter(dim_x=4, dim_z=2)  # 2D position and velocity
+        # Initialize state and covariance matrix
+        ekf.x = np.array([0, 0, 0, 0])  # Initial state (position and velocity)
+        ekf.P = np.eye(4)  # Initial covariance matrix
+        # Set process and measurement noise covariance matrices
+        ekf.Q *= 0.01  # Process noise covariance
+        ekf.R *= 0.1  # Measurement noise covariance
+        self.cone_filters[cone_type] = ekf
+
+    def update_filter(self, cone_type, measurement):
+        # Get the corresponding EKF for the cone
+        ekf = self.cone_filters[cone_type]
+        
+        # Prediction step: Predict next state based on motion model
+        ekf.predict()
+        
+        # Correction step: Update state based on measurement
+        ekf.update(measurement)
+
+        # Extract updated position from EKF state
+        updated_position = ekf.x[:2]
+        # Use updated position for further processing or publishing
+        self.cone_lists[cone_type].append(Point(updated_position[0], updated_position[1], 0))
 
 
     def publish_cones(self):
